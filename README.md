@@ -62,11 +62,14 @@ Share the generated download link with others
 ⚙️ Configuration
 File size limit → set in your php.ini
 File expiration time → edit index.php
-Storage path → configure inindex.php
+Storage path → configure index.php
 
 📸 Screenshots
 ![2025-10-02 11_29_39-DesktopNotification](https://github.com/user-attachments/assets/7d43228a-3d13-458a-945e-bd631d904142)
 
+
+
+cleanup_shares.sh should be run as a cron job. It deletes files older than x days
 
 🛡️ Disclaimer
 SendFile is a hobby project for personal and team use.
