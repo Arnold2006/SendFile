@@ -28,7 +28,7 @@ Think of it as your personal file transfer service — fast, private, and withou
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/sendfile.git
+   git clone https://github.com/Arnold2006/sendfile.git
    cd sendfile
 Move the project files to your web server’s root directory:
 
@@ -56,24 +56,21 @@ sudo systemctl restart apache2
 sudo systemctl restart nginx
 🚀 Usage
 Visit your site in a browser (http://yourserver/sendfile)
-
 Drag & drop a file or click Upload
-
 Share the generated download link with others
 
 ⚙️ Configuration
 File size limit → set in your php.ini
-
-File expiration time → edit config.php
-
-Storage path → configure in config.php
+File expiration time → edit index.php
+Storage path → configure inindex.php
 
 📸 Screenshots
-(Add your screenshots here)
+![2025-10-02 11_29_39-DesktopNotification](https://github.com/user-attachments/assets/7d43228a-3d13-458a-945e-bd631d904142)
+
 
 🛡️ Disclaimer
 SendFile is a hobby project for personal and team use.
 Do not use it in production without adding proper security (authentication, encryption, virus scanning).
 
 📄 License
-MIT License © 2025 [Your Name]
+MIT License © 2025 Ole Rasmussen
