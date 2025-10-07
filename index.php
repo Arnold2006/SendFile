@@ -411,8 +411,13 @@ body {
 </style>
 </head>
 <body>
-<div class="header">
+<div class="header" style="position:relative;">
     <img src="/assets/logo.png" alt="SendFiles Logo">
+    <a href="#" id="about-link" style="position:absolute;right:32px;top:20px;color:#3781F7;font-weight:600;font-size:1.08rem;text-decoration:underline;">About</a>
+</div>
+    
+    
+    
 </div>
 <div class="main-layout">
 <div class="container light">
@@ -500,6 +505,35 @@ function chunkedDownload(downloadBtn, shareId, fileStoredName, fileDisplayName, 
     start();
 }
 </script>
+
+<div id="about-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:10001;justify-content:center;align-items:center;">
+    <div class="wrap light" style="max-width: 420px; box-shadow: 0 12px 32px rgba(218,120,42,0.22); padding:32px 28px; margin:0;">
+        <div style="font-size:1.5rem;font-weight:700;margin-bottom:10px;">About SendFiles</div>
+        <div style="font-size:1.08rem;line-height:1.6;">
+            <p><strong>SendFiles</strong> is a secure, anonymous file sharing app. Upload large .zip or .rar files (up to 2TB), get a shareable link, and recipients can download files chunk by chunk for reliability. No login is required, and files auto-expire after 2 days.</p>
+            <p>Uploads are private, and only those with the link can access your files. We never store any data beyond the configured expiry.</p>
+        </div>
+        <button id="about-close" class="btn" style="margin-top:20px;">Close</button>
+    </div>
+</div>
+<script>
+document.getElementById('about-link').onclick = function(e){
+    e.preventDefault();
+    document.getElementById('about-overlay').style.display = 'flex';
+};
+document.getElementById('about-close').onclick = function(){
+    document.getElementById('about-overlay').style.display = 'none';
+};
+document.getElementById('about-overlay').onclick = function(e){
+    if (e.target === this) this.style.display = 'none';
+};
+</script>
+
+
+
+
+
+
 </body>
 </html>
     <?php
@@ -672,8 +706,9 @@ body {
 </style>
 </head>
 <body>
-<div class="header">
+<div class="header" style="position:relative;">
     <img src="/assets/logo.png" alt="SendFiles Logo">
+    <a href="#" id="about-link" style="position:absolute;right:32px;top:20px;color:#3781F7;font-weight:600;font-size:1.08rem;text-decoration:underline;">About</a>
 </div>
 <div class="main-layout">
   <div class="wrap light">
@@ -861,6 +896,32 @@ send.addEventListener('click', ()=>{
   );
 });
 </script>
+
+
+<div id="about-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:10001;justify-content:center;align-items:center;">
+    <div class="wrap light" style="max-width: 420px; box-shadow: 0 12px 32px rgba(218,120,42,0.22); padding:32px 28px; margin:0;">
+        <div style="font-size:1.5rem;font-weight:700;margin-bottom:10px;">About SendFiles</div>
+        <div style="font-size:1.08rem;line-height:1.6;">
+            <p><strong>SendFiles</strong> is a secure, anonymous file sharing app. Upload large .zip or .rar files (up to 2TB), get a shareable link, and recipients can download files chunk by chunk for reliability. No login is required, and files auto-expire after 2 days.</p>
+            <p>Uploads are private, and only those with the link can access your files. We never store any data beyond the configured expiry.</p>
+        </div>
+        <button id="about-close" class="btn" style="margin-top:20px;">Close</button>
+    </div>
+</div>
+<script>
+document.getElementById('about-link').onclick = function(e){
+    e.preventDefault();
+    document.getElementById('about-overlay').style.display = 'flex';
+};
+document.getElementById('about-close').onclick = function(){
+    document.getElementById('about-overlay').style.display = 'none';
+};
+document.getElementById('about-overlay').onclick = function(e){
+    if (e.target === this) this.style.display = 'none';
+};
+</script>
+
+
 </body>
 </html>
 <?php
