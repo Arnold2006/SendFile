@@ -511,7 +511,7 @@ function chunkedDownload(downloadBtn, shareId, fileStoredName, fileDisplayName, 
         <div style="font-size:1.5rem;font-weight:700;margin-bottom:10px;">About SendFiles</div>
         <div style="font-size:1.08rem;line-height:1.6;">
             <p><strong>SendFiles</strong> is a secure, anonymous file sharing service built for privacy — not profit.<br>
-            We’re a small, independent project with no investors, no tracking, and no interest in your data. Unlike big tech platforms, we don’t scan, analyze, or monetize your uploads.</p>
+            We’re a small, independent project with no investors, no tracking, and no interest in your data. Unlike big tech platforms, we don’t scan, analyze, or monetize your uploads.(for more privacy, encrypt your files)</p>
             <p>Upload large .zip or .rar files (up to 2 TB), share a private link, and your recipient can download reliably in chunks. Files automatically expire after 2 days and are then permanently deleted.</p>
             <p>No accounts. No logs. No ads.<br>
             Just simple, private file sharing — the way it should be.</p>
@@ -906,7 +906,7 @@ send.addEventListener('click', ()=>{
         <div style="font-size:1.5rem;font-weight:700;margin-bottom:10px;">About SendFiles</div>
         <div style="font-size:1.08rem;line-height:1.6;">
             <p><strong>SendFiles</strong> is a secure, anonymous file sharing service built for privacy — not profit.<br>
-            We’re a small, independent project with no investors, no tracking, and no interest in your data. Unlike big tech platforms, we don’t scan, analyze, or monetize your uploads.</p>
+            We’re a small, independent project with no investors, no tracking, and no interest in your data. Unlike big tech platforms, we don’t scan, analyze, or monetize your uploads.(for more privacy, encrypt your files)</p>
             <p>Upload large .zip or .rar files (up to 2 TB), share a private link, and your recipient can download reliably in chunks. Files automatically expire after 2 days and are then permanently deleted.</p>
             <p>No accounts. No logs. No ads.<br>
             Just simple, private file sharing — the way it should be.</p>
