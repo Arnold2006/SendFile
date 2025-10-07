@@ -417,8 +417,7 @@ body {
 </div>
     
     
-    
-</div>
+
 <div class="main-layout">
 <div class="container light">
     <div class="h1">Your files are ready!</div>
@@ -507,7 +506,7 @@ function chunkedDownload(downloadBtn, shareId, fileStoredName, fileDisplayName, 
 </script>
 
 <div id="about-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:10001;justify-content:center;align-items:center;">
-    <div class="wrap light" style="max-width: 420px; box-shadow: 0 12px 32px rgba(218,120,42,0.22); padding:32px 28px; margin:0;">
+    <div class="container light" style="max-width: 420px; box-shadow: 0 12px 32px rgba(218,120,42,0.22); padding:32px 28px; margin:0;">
         <div style="font-size:1.5rem;font-weight:700;margin-bottom:10px;">About SendFiles</div>
         <div style="font-size:1.08rem;line-height:1.6;">
             <p><strong>SendFiles</strong> is a secure, anonymous file sharing service built for privacy — not profit.<br>
