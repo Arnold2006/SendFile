@@ -17,7 +17,7 @@ const UPLOAD_DIR = __DIR__ . '/uploads';
 const DATA_DIR = __DIR__ . '/data';
 const TMP_DIR = __DIR__ . '/tmp_chunks';
 const SHARE_ID_LEN = 16; // hex chars
-const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024 * 1024; // 2 TB (keep in mind PHP/FS limits)
+const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2 TB (keep in mind PHP/FS limits)
 const CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB
 const SHARE_TTL_DAYS = 2;
 
@@ -699,7 +699,7 @@ function chunkedDownload(downloadBtn, shareId, fileStoredName, fileDisplayName, 
         <div style="font-size:1.08rem;line-height:1.6;">
             <p><strong>SendFiles</strong> is a secure, anonymous file sharing service built for privacy — not profit.<br>
             We’re a small, independent project with no investors, no tracking, and no interest in your data. Unlike big tech platforms, we don’t scan, analyze, or monetize your uploads.
-            <p>Upload large .zip or .rar files (up to 2 TB), share a private link, and your recipient can download reliably in chunks. Files automatically expire after 2 days and are then permanently deleted.
+            <p>Upload large .zip or .rar files (up to 2 GB), share a private link, and your recipient can download reliably in chunks. Files automatically expire after 2 days and are then permanently deleted.
             <p>No accounts. No logs. No ads.<br>
             Just simple, private file sharing — the way it should be.</p>
         </div>
@@ -908,7 +908,7 @@ body {
           <span style="font-size:1.3rem;">Drop files here or click to choose</span>
           <br>
           <span style="font-size:.95rem; color:#b88c4a">
-            Only .zip and .rar files allowed. Up to <?php echo round(MAX_FILE_SIZE/(1024*1024*1024*1024),2); ?> TB per file
+            Only .zip and .rar files allowed. Up to <?php echo round(MAX_FILE_SIZE/(1024*1024*1024),2); ?> GB per file
           </span>
         </div>
         <input id="fileinput" type="file" multiple accept=".zip,.rar" style="display:none">
@@ -1101,7 +1101,7 @@ send.addEventListener('click', ()=>{
         <div style="font-size:1.08rem;line-height:1.6;">
             <p><strong>SendFiles</strong> is a secure, anonymous file sharing service built for privacy — not profit.<br>
             We’re a small, independent project with no investors, no tracking, and no interest in your data. Unlike big tech platforms, we don’t scan, analyze, or monetize your uploads.
-            <p>Upload large .zip or .rar files (up to 2 TB), share a private link, and your recipient can download reliably in chunks. Files automatically expire after 2 days and are then permanently deleted.
+            <p>Upload large .zip or .rar files (up to 2 GB), share a private link, and your recipient can download reliably in chunks. Files automatically expire after 2 days and are then permanently deleted.
             <p>No accounts. No logs. No ads.<br>
             Just simple, private file sharing — the way it should be.</p>
         </div>
