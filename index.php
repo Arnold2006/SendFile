@@ -17,14 +17,14 @@ const UPLOAD_DIR = __DIR__ . '/uploads';
 const DATA_DIR = __DIR__ . '/data';
 const TMP_DIR = __DIR__ . '/tmp_chunks';
 const SHARE_ID_LEN = 16; // hex chars
-const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2 TB (keep in mind PHP/FS limits)
+const MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2 GB (keep in mind PHP/FS limits)
 const CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB
 const SHARE_TTL_DAYS = 2;
 
 // If you enable Apache mod_xsendfile, set to true and configure Apache accordingly.
 // When true, serve_file() will send "X-Sendfile: /abs/path" header instead of readfile().
 // Requires mod_xsendfile (or equivalent) on your Apache server.
-const ENABLE_X_SENDFILE = true;
+const ENABLE_X_SENDFILE = false;
 
 umask(0022);
 
@@ -117,7 +117,7 @@ function is_inside_dir($base, $path){
     $realBase = realpath($base);
     $realPath = realpath($path);
     if ($realBase === false || $realPath === false) return false;
-    return strpos($realPath, $realBase) === 0;
+    return $realPath === $realBase || strpos($realPath, $realBase . DIRECTORY_SEPARATOR) === 0;
 }
 
 // Returns 'zip'|'rar'|false
@@ -199,6 +199,7 @@ function serve_file($share, $file){
     if (!is_valid_share_id($share)) { http_response_code(404); exit('Share not found'); }
     $meta = json_load($share);
     if (!$meta) { http_response_code(404); exit('Share not found'); }
+    if (time() > $meta['expires']) { http_response_code(410); exit('Share has expired'); }
     $found = null;
     foreach ($meta['files'] as $f) {
         if ($f['stored'] === $file || $f['name'] === $file) { $found = $f; break; }
@@ -235,9 +236,11 @@ function serve_zip($share){
     if (!is_valid_share_id($share)) { http_response_code(404); exit('Share not found'); }
     $meta = json_load($share);
     if (!$meta) { http_response_code(404); exit('Share not found'); }
+    if (time() > $meta['expires']) { http_response_code(410); exit('Share has expired'); }
     $dir = UPLOAD_DIR . "/$share";
     if (!class_exists('ZipArchive')) { http_response_code(500); exit('ZIP not available'); }
     $zipname = tempnam(sys_get_temp_dir(), 'zip');
+    if ($zipname === false) { http_response_code(500); exit('Failed to create temporary file'); }
     $zip = new ZipArchive();
     if ($zip->open($zipname, ZipArchive::CREATE | ZipArchive::OVERWRITE)!==TRUE) exit('Could not create zip');
     foreach($meta['files'] as $f){
@@ -289,6 +292,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
 
     $chunk_dir = TMP_DIR . "/$file_id";
     if (!is_dir($chunk_dir)) mkdir($chunk_dir, 0755, true);
+
+    // Reject if chunk itself exceeds max file size
+    if ($_FILES['chunk']['size'] > MAX_FILE_SIZE) {
+        echo json_encode(['ok'=>false,'error'=>'Chunk too large']); exit;
+    }
+
+    // Track accumulated session size atomically to prevent disk exhaustion
+    $acc_file = $chunk_dir . '/.acc_size';
+    $acc_fp = fopen($acc_file, 'c+');
+    if (!$acc_fp) {
+        echo json_encode(['ok'=>false,'error'=>'Failed to track upload size']); exit;
+    }
+    if (!flock($acc_fp, LOCK_EX)) {
+        fclose($acc_fp);
+        echo json_encode(['ok'=>false,'error'=>'Failed to lock accumulator']); exit;
+    }
+    $acc_size = (int)stream_get_contents($acc_fp) + $_FILES['chunk']['size'];
+    if ($acc_size > MAX_FILE_SIZE) {
+        flock($acc_fp, LOCK_UN);
+        fclose($acc_fp);
+        echo json_encode(['ok'=>false,'error'=>'Total upload size exceeds limit']); exit;
+    }
+    ftruncate($acc_fp, 0);
+    rewind($acc_fp);
+    fwrite($acc_fp, (string)$acc_size);
+    flock($acc_fp, LOCK_UN);
+    fclose($acc_fp);
 
     // save chunk safely
     $chunk_path = $chunk_dir . "/chunk_$chunk_index";
@@ -363,6 +393,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
 
     flock($lockFp, LOCK_UN);
     fclose($lockFp);
+    // Remove lock and accumulator files so rmdir can succeed
+    @unlink($lockFile);
+    @unlink($chunk_dir . '/.acc_size');
     @rmdir($chunk_dir);
 
     if (!$ok) echo json_encode(['ok'=>false,'error'=>$res]);
@@ -382,8 +415,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
         http_response_code(400);
         echo json_encode(['ok'=>false,'error'=>'Missing or invalid parameters']); exit;
     }
+    // Cap chunk_size to the server-defined maximum to prevent memory exhaustion
+    if ($chunk_size < 1 || $chunk_size > CHUNK_SIZE) { $chunk_size = CHUNK_SIZE; }
     $meta = json_load($share);
     if (!$meta) { http_response_code(404); echo json_encode(['ok'=>false,'error'=>'Share not found']); exit; }
+    if (time() > $meta['expires']) { http_response_code(410); echo json_encode(['ok'=>false,'error'=>'Share has expired']); exit; }
     $found = null;
     foreach ($meta['files'] as $f) {
         if ($f['stored'] === $file || $f['name'] === $file) { $found = $f; break; }
@@ -430,7 +466,8 @@ $bg_image = get_random_bg_image();
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['s'])){
     $share = $_GET['s'];
     $meta = json_load($share);
-    if (!$meta) { http_response_code(404); }
+    if (!$meta) { http_response_code(404); exit('Share not found'); }
+    if (time() > $meta['expires']) { http_response_code(410); exit('Share has expired'); }
     if (isset($_GET['file'])) serve_file($share, $_GET['file']);
     if (isset($_GET['zip'])) serve_zip($share);
     ?>
